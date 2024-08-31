@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    image: backend:task6
+    ports:
+      - "5252"  # No need to expose the port directly as Nginx will handle routing
+    deploy:
+      replicas: 2  # Specify the number of backend instances
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    image: frontend:task6
+    ports:
+      - "9000:9000"
+    container_name: frontend
+    networks:
+      - app-network
+
+  proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    image: proxy:task6
+    ports:
+      - "80:80"
+    container_name: proxy
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

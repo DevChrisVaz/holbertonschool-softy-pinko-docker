@@ -1,0 +1,22 @@
+version: '3.8'  # Specify the Compose file version
+
+services:
+  backend:
+    build:
+      context: ./back-end  # Directory containing the Dockerfile and source for the back-end service
+      dockerfile: Dockerfile  # Dockerfile name (default is Dockerfile, so this line can be omitted if the name is default)
+    image: backend:task4  # Image name to tag the built image
+    ports:
+      - "5252:5252"  # Map port 5252 of the host to port 5252 of the container
+    container_name: backend_container
+
+  frontend:
+    build:
+      context: ./front-end  # Directory containing the Dockerfile and source for the front-end service
+      dockerfile: Dockerfile  # Dockerfile name (default is Dockerfile, so this line can be omitted if the name is default)
+    image: frontend:task4  # Image name to tag the built image
+    ports:
+      - "9000:9000"  # Map port 9000 of the host to port 9000 of the container
+    container_name: frontend_container
+    depends_on:
+      - backend  # Ensure the backend service starts before the frontend service

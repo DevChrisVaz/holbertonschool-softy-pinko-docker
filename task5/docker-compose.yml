@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./back-end
+      dockerfile: Dockerfile
+    image: backend:task5
+    ports:
+      - "5252:5252"
+    container_name: backend
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    image: frontend:task5
+    ports:
+      - "9000:9000"
+    container_name: frontend
+    networks:
+      - app-network
+
+  proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    image: proxy:task5
+    ports:
+      - "80:80"
+    container_name: proxy
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
